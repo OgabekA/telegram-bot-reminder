@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UZEL - Reminder Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #2b7bb9;
+            margin-bottom: 10px;
+        }
+        input, button {
+            width: 90%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2b7bb9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #1a5f91;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Set Your Reminder</h1>
+        <p>Never miss a task again with UZEL!</p>
+        <input type="text" id="reminderText" placeholder="What do you want to be reminded about?">
+        <input type="datetime-local" id="reminderTime">
+        <button onclick="submitReminder()">Set Reminder</button>
+    </div>
+
+    <div class="footer">
+        <p>Powered by UZEL | Telegram WebApp Integration</p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();  // Expand the WebApp in Telegram
+
+        function submitReminder() {
+            const reminderText = document.getElementById('reminderText').value.trim();
+            const reminderTime = document.getElementById('reminderTime').value;
+
+            if (!reminderText || !reminderTime) {
+                alert("⚠️ Please fill in both the reminder message and time.");
+                return;
+            }
+
+            // Send the data to your backend endpoint
+            fetch('https://your-backend-endpoint.com/set_reminder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: tg.initDataUnsafe.user.id,
+                    reminder_text: reminderText,
+                    reminder_time: reminderTime
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✅ Reminder successfully set!');
+                    tg.close(); // Close the WebApp after setting reminder
+                } else {
+                    alert('❌ Failed to set reminder. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('🚨 An error occurred. Please try again later.');
+            });
+        }
+    </script>
+</body>
+</html>
