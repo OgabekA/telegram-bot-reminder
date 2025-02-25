@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 # Load env vars
 TOKEN = os.getenv('7994298291:AAELA0EndHVZT6k7lnbt7ujBvchJfuyxuuA')
-GROUP_CHAT_ID = os.getenv(-1002413876809)
-WEBHOOK_URL = os.getenv(https://telegram-bot-reminder-ga10.onrender.com)  # E.g., https://yourapp.onrender.com
+GROUP_CHAT_ID = os.getenv('-1002413876809')
+WEBHOOK_URL = os.getenv('https://telegram-bot-reminder-ga10.onrender.com')  # E.g., https://yourapp.onrender.com
 
 scheduled_events = {}
 
