@@ -42,13 +42,19 @@ async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE)
         data = json.loads(update.message.web_app_data.data)
         reminder_text = data.get('text')
         reminder_time = data.get('time')
+        logger.info(f"📥 Data from WebApp: {data}")  # 🔍 Logs raw data
 
-        event_datetime = datetime.datetime.fromisoformat(reminder_time)
-        ny_zone = pytz.timezone('America/New_York')
-        event_datetime_ny = ny_zone.localize(event_datetime)
-        event_datetime_utc = event_datetime_ny.astimezone(pytz.utc)
+        # 🚨 Direct Test Message to Confirm Data Flow
+        await context.bot.send_message(
+            chat_id=GROUP_CHAT_ID,
+            text=f"🧪 **Test Message:** Received reminder: {reminder_text} at {reminder_time}"
+        )
 
-        event_id = str(uuid.uuid4())
+        # ⚡ Proceed with scheduling logic after testing
+    except Exception as e:
+        logger.error(f"🚨 Error processing WebApp data: {str(e)}")
+        await update.message.reply_text("❌ Failed to set reminder. Please try again.")
+
 
         # ✅ Schedule reminder
         async def job_callback(job_context: ContextTypes.DEFAULT_TYPE):
